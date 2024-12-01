@@ -21,7 +21,7 @@ public class StoreService {
 
     public StoreService() {
         this.sm = StoreManagerImpl.getInstance();
-        if (sm.getAllItems().isEmpty()) {
+        if (sm.findAllItems().isEmpty()) {
             this.sm.addItem(new Item("1", "Laptop", "High performance laptop", 1, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGoQDLRQCgfedvcfRBgWol-dXTJ4IpIGgppg&s"));
             this.sm.addItem(new Item("2", "Smartphone", "Latest model smartphone", 800, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6t0zst_7dmMNi-eJBK58VuHLee0Q5PBQatg&s"));
             this.sm.addItem(new Item("3", "Headphones", "Noise-cancelling headphones", 150, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2FKeSgIbsF64rqq-7OrmYxyq3k0a-TXnklg&s"));
@@ -29,7 +29,7 @@ public class StoreService {
     }
 
     public List<Item> getItemsLocal() {
-        return this.sm.getAllItems();
+        return this.sm.findAllItems();
     }
 
     @GET
@@ -40,7 +40,7 @@ public class StoreService {
     })
     @Produces(MediaType.APPLICATION_JSON)
     public Response getItems() {
-        List<Item> items = this.sm.getAllItems();
+        List<Item> items = this.sm.findAllItems();
         if (items.isEmpty()) {
             return Response.status(Response.Status.NO_CONTENT).build();
         }
@@ -60,7 +60,7 @@ public class StoreService {
             return Response.status(Response.Status.FORBIDDEN).entity("No tienes permiso para realizar esta acción").build();
         }
 
-        for (Item existingItem : this.sm.getAllItems()) {
+        for (Item existingItem : this.sm.findAllItems()) {
             if (existingItem.getName().equals(item.getName())) {
                 return Response.status(409).entity("Item already exists").build();
             }
@@ -83,7 +83,7 @@ public class StoreService {
         }
 
         Item itemToRemove = null;
-        for (Item item : this.sm.getAllItems()) {
+        for (Item item : this.sm.findAllItems()) {
             if (item.getName().equals(name)) {
                 itemToRemove = item;
                 break;

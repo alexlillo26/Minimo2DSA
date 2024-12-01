@@ -1,10 +1,12 @@
 package edu.upc.dsa;
 
-import edu.upc.dsa.exceptions.UserNotFoundException;
+import edu.upc.dsa.models.Inventory;
 import edu.upc.dsa.models.User;
 
 import java.util.LinkedList;
 import java.util.List;
+
+import edu.upc.dsa.util.RandomUtils;
 import org.apache.log4j.Logger;
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -37,27 +39,22 @@ public class UserManagerImpl implements UserManager {
 
     @Override
     public User addUser(String username, String password, String isAdmin, String fullName, String email, int age, String profilePicture, int coins) {
-        // Verificar si la contraseña no está vacía antes de encriptar
         if (password == null || password.trim().isEmpty()) {
             logger.warn("Contraseña vacía para el usuario: " + username);
             throw new IllegalArgumentException("La contraseña no puede estar vacía");
         }
         String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
-        // Crear un nuevo usuario con los parámetros adicionales
         return this.addUsers(new User(username, hashedPassword, isAdmin, fullName, email, age, profilePicture, coins));
     }
 
     public User addUser(String username, String password, String isAdmin) {
-        // Verificar si la contraseña no está vacía antes de encriptar
         if (password == null || password.trim().isEmpty()) {
             logger.warn("Contraseña vacía para el usuario: " + username);
             throw new IllegalArgumentException("La contraseña no puede estar vacía");
         }
         String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
-        // Crear un nuevo usuario con los parámetros adicionales
-        return this.addUsers(new User(username, hashedPassword, isAdmin, null, null, 0, null, 0));
+        return this.addUsers(new User(username, hashedPassword, isAdmin));
     }
-
 
     public User getUser(String id) {
         logger.info("getUser(" + id + ")");
@@ -82,6 +79,7 @@ public class UserManagerImpl implements UserManager {
         logger.warn("not found " + name);
         return null;
     }
+
     public User getUserProfileByUsername(String name) {
         logger.info("getUser(" + name + ")");
         for (User t : this.Users) {
@@ -121,6 +119,7 @@ public class UserManagerImpl implements UserManager {
             t.setEmail(p.getEmail());
             t.setAge(p.getAge());
             t.setProfilePicture(p.getProfilePicture());
+            t.setCoins(p.getCoins());
 
             logger.info(t + " updated ");
         } else {

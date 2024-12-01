@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+    <title>Perfil de Usuario</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -13,32 +12,34 @@
             padding: 0;
             color: #333;
         }
+
         header {
             background-color: #007acc;
             color: white;
             padding: 10px 20px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            position: relative;
         }
+
         header h1 {
             margin: 0;
             font-size: 1.5rem;
         }
-        .coins-display {
-            position: absolute;
-            top: 10px;
-            right: 120px;
-            background-color: #004577;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 1rem;
-        }
+
         .menu-container {
+            display: flex;
+            align-items: center;
+            margin-left: auto;
             position: relative;
         }
+
+        .coins-display {
+            margin-right: 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            color: white;
+        }
+
         .menu-button {
             background-color: #005f99;
             color: white;
@@ -48,9 +49,11 @@
             cursor: pointer;
             font-size: 1rem;
         }
+
         .menu-button:hover {
             background-color: #004577;
         }
+
         .dropdown-menu {
             position: absolute;
             right: 0;
@@ -62,6 +65,7 @@
             flex-direction: column;
             min-width: 150px;
         }
+
         .dropdown-menu a {
             text-decoration: none;
             padding: 10px 15px;
@@ -69,10 +73,12 @@
             display: block;
             font-size: 1rem;
         }
+
         .dropdown-menu a:hover {
             background-color: #f4f9fc;
             color: #007acc;
         }
+
         .container {
             max-width: 800px;
             margin: 50px auto;
@@ -81,71 +87,144 @@
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
             border-radius: 5px;
         }
-        p {
-            color: #555;
+
+        h1 {
+            color: #007acc;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #007acc;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .item-image {
+            width: 100px;
+            height: auto;
         }
     </style>
 </head>
 <body>
+
 <header>
-    <h1 id="welcomeMessage">Tienda</h1>
-    <div class="coins-display" id="coinsDisplay">Coins: 0</div>
+    <h1 id="welcomeMessage">Perfil de Usuario</h1>
     <div class="menu-container">
-        <button class="menu-button">Menu</button>
+        <div class="coins-display" id="coinsDisplay">Coins: 0</div>
+        <button class="menu-button">Menú</button>
         <div class="dropdown-menu">
-            <a href="http://localhost:8080/profile.html">Ver Perfil</a>
-            <a href="http://localhost:8080/tienda.xml.html">Tienda</a>
-            <a href="#" id="logoutButton" style="color: #dc3545;">Cerrar Sesion</a>
+            <a href="profile.html">Ver Perfil</a>
+            <a href="tienda.xml.html">Tienda</a>
+            <a href="http://localhost:8080/user.html">Inicio</a>
+            <a href="#" id="logoutButton" style="color: #dc3545;">Cerrar Sesión</a>
         </div>
     </div>
 </header>
+
 <div class="container">
-    <p>Has iniciado sesion correctamente. Aqui puedes gestionar las funciones de tu cuenta y acceder a configuraciones.</p>
+    <h1>Inventario</h1>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Precio</th>
+            <th>Imagen</th>
+            <th>Cantidad</th>
+        </tr>
+        </thead>
+        <tbody id="inventoryTableBody">
+        <!-- Inventory items will be populated here -->
+        </tbody>
+    </table>
 </div>
 
 <script>
-    // Mostrar/Ocultar menú desplegable
-    const menuButton = document.querySelector('.menu-button');
-    const dropdownMenu = document.querySelector('.dropdown-menu');
-    menuButton.addEventListener('click', () => {
-        const isVisible = dropdownMenu.style.display === 'block';
-        dropdownMenu.style.display = isVisible ? 'none' : 'block';
-    });
+    document.addEventListener("DOMContentLoaded", () => {
+      const menuButton = document.querySelector(".menu-button");
+      const dropdownMenu = document.querySelector(".dropdown-menu");
 
-    // Personalizar el mensaje de bienvenida con el username
-    const username = localStorage.getItem('username');
-    if (username) {
-        document.getElementById('welcomeMessage').textContent = `Bienvenido, ${username}`;
-    }
+      menuButton.addEventListener("click", () => {
+        dropdownMenu.style.display =
+          dropdownMenu.style.display === "block" ? "none" : "block";
+      });
 
-    // Mostrar el número de monedas
-    const coins = localStorage.getItem('coins') || 0; // Usar 0 si no hay monedas guardadas
-    const coinsDisplay = document.getElementById('coinsDisplay');
-    coinsDisplay.textContent = `Coins: ${coins}`;
+      const username = localStorage.getItem("username");
+      if (username) {
+        document.getElementById("welcomeMessage").textContent = `Bienvenido, ${username}`;
+      }
 
-    // Verificar si el usuario ha iniciado sesión antes
-    const userLoggedInBefore = localStorage.getItem('userLoggedInBefore');
-    if (!userLoggedInBefore) {
-        localStorage.clear(); // Borra toda la información guardada
-        localStorage.setItem('username', username); // Guardar el nombre de usuario actual
-        localStorage.setItem('userLoggedInBefore', 'true'); // Marcar que el usuario ha iniciado sesión
-        window.location.reload(); // Recargar la página para aplicar los cambios
-    }
+      const coins = localStorage.getItem("coins") || 0;
+      document.getElementById("coinsDisplay").textContent = `Coins: ${coins}`;
 
-    // Cerrar sesión redirigiendo a la página inicial
-    const logoutButton = document.getElementById('logoutButton');
-    logoutButton.addEventListener('click', (event) => {
+      document.getElementById("logoutButton").addEventListener("click", (event) => {
         event.preventDefault();
-        localStorage.clear(); // Borra toda la información guardada
-        window.location.href = 'http://localhost:8080/';
+        localStorage.clear();
+        window.location.href = "http://localhost:8080/";
+      });
+
+      document.addEventListener("click", (event) => {
+        if (!menuButton.contains(event.target) && !dropdownMenu.contains(event.target)) {
+          dropdownMenu.style.display = "none";
+        }
+      });
+
+      fetchInventory();
     });
 
-    // Ocultar menú si se hace clic fuera
-    document.addEventListener('click', (event) => {
-        if (!menuButton.contains(event.target) && !dropdownMenu.contains(event.target)) {
-            dropdownMenu.style.display = 'none';
-        }
-    });
+    async function fetchInventory() {
+      const username = localStorage.getItem("username");
+      if (!username) {
+        window.location.href = "http://localhost:8080/";
+        return;
+      }
+
+      try {
+        const response = await fetch(`http://localhost:8080/dsaApp/users/${username}/inventory/items`);
+        const inventoryItems = await response.json();
+        const tableBody = document.getElementById("inventoryTableBody");
+        tableBody.innerHTML = "";
+
+        inventoryItems.forEach((item) => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${item.item.id}</td>
+            <td>${item.item.name}</td>
+            <td>${item.item.description}</td>
+            <td>${item.item.price}</td>
+            <td>
+              <a href="${item.item.imageUrl}" target="_blank">
+                <img src="${item.item.imageUrl}" alt="${item.item.name}" class="item-image">
+              </a>
+            </td>
+            <td>${item.quantity}</td>
+          `;
+          tableBody.appendChild(row);
+        });
+      } catch (error) {
+        console.error("Error fetching inventory:", error);
+      }
+    }
 </script>
+
 </body>
 </html>

@@ -1,22 +1,23 @@
-
 package edu.upc.dsa.models;
 
 import edu.upc.dsa.util.RandomUtils;
 
 public class User {
     private String username;
-    private String password; // Recuerda que normalmente se debe almacenar hasheada
+    private String password;
     private String id;
     private String isAdmin;
     private String fullName;
     private String email;
     private int age;
-    private String profilePicture; // URL o path de la imagen de perfil
+    private String profilePicture;
     private int coins;
+    private Inventory inventory; // Correctly defined as Inventory
 
     public User() {
         this.setId(RandomUtils.getId());
         this.isAdmin = "notadmin";
+        this.coins = 200;
     }
 
     public User(String username, String password, String isAdmin) {
@@ -35,7 +36,7 @@ public class User {
         this.coins = coins;
     }
 
-    // Getters y Setters
+    // Getters and Setters
     public String getIsAdmin() {
         return isAdmin;
     }
@@ -108,9 +109,11 @@ public class User {
         this.coins = coins;
     }
 
+
+
     @Override
     public String toString() {
         return "User [id=" + id + ", username=" + username + ", password=" + password + ", fullName=" + fullName +
-                ", email=" + email + ", age=" + age + ", profilePicture=" + profilePicture + "coins=" + coins + "]";
+                ", email=" + email + ", age=" + age + ", profilePicture=" + profilePicture + ", coins=" + coins + "]";
     }
 }
